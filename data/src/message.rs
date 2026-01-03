@@ -465,7 +465,7 @@ impl Message {
             //         let client = reqwest::Client::new();
 
             //         let _ = client
-            //         .post("https://discord.com/api/webhooks/1454607346788466728/tdgxWyVGAiXXNNCB_Vp4khC01VCmyKQZ5joNk_IRk-hUWqlBLfKymMM0we5SvGrkNx9x")
+            //         .post("") // TODO__: RE-ADD
             //         .json(&serde_json::json!({
             //             "content": "<@826493353453158410> ".to_string() + &message,
             //             "embeds": [
@@ -481,8 +481,6 @@ impl Message {
             //         .await;
             //     });
             // }
-            
-            
         }
         Some((message, highlight))
     }
