@@ -6,6 +6,8 @@
 
 Halloy is an open-source IRC client written in Rust, with the Iced GUI library. It aims to provide a simple and fast client for Mac, Windows, and Linux platforms.
 
+This specific release includes additional config options for Discord integration, particularly for sending pings over a webhook to notify you of changes in the REDacted interview queue.
+
 * Documentation for latest release: [https://halloy.chat](https://halloy.chat).
 * Documentation for main branch (when building from source): [https://unstable.halloy.chat](https://unstable.halloy.chat).
 
