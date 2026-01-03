@@ -27,6 +27,7 @@ pub use self::sidebar::Sidebar;
 use crate::appearance::theme::Styles;
 use crate::appearance::{self, Appearance};
 use crate::audio::{self};
+use crate::config::discord_webhook::DiscordWebhook;
 use crate::serde::deserialize_positive_integer_maybe;
 use crate::server::{ConfigMap as ServerMap, ServerName};
 use crate::{Theme, environment};
@@ -34,6 +35,7 @@ use crate::{Theme, environment};
 pub mod actions;
 pub mod buffer;
 pub mod ctcp;
+pub mod discord_webhook;
 pub mod file_transfer;
 pub mod highlights;
 pub mod inclusivities;
@@ -317,6 +319,7 @@ impl Config {
             pub actions: Actions,
             pub ctcp: Ctcp,
             pub logs: Logs,
+            pub discord_webhook: DiscordWebhook,
             pub platform_specific: PlatformSpecific,
         }
 
@@ -340,6 +343,7 @@ impl Config {
                     actions: Actions::default(),
                     ctcp: Ctcp::default(),
                     logs: Logs::default(),
+                    discord_webhook: DiscordWebhook::default(),
                     platform_specific: PlatformSpecific::default(),
                 }
             }
@@ -373,6 +377,7 @@ impl Config {
             actions,
             ctcp,
             logs,
+            discord_webhook,
             platform_specific,
         } = serde_ignored::deserialize(config, |ignored| {
             log::warn!("[config.toml] Ignoring unknown setting: {ignored}");

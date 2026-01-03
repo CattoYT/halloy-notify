@@ -17,7 +17,7 @@ tor = ["data/tor"]
 members = ["data", "ipc", "irc", "irc/proto"]
 
 [workspace.package]
-version = "0.1.0"
+version = "2025.12.0-modded"
 authors = ["Casper Rogild Storm", "Cory Forsstrom", "Andrew Baldwin"]
 license = "GPL-3.0-or-later"
 edition = "2024"
@@ -61,9 +61,9 @@ log = { workspace = true }
 uptime_lib = { workspace = true }
 nucleo-matcher = { workspace = true }
 
-data = { version = "0.1.0", path = "data" }
-ipc = { version = "0.1.0", path = "ipc" }
-irc = { version = "0.1.0", path = "irc" }
+data = { version = "2025.12.0-modded", path = "data" }
+ipc = { version = "2025.12.0-modded", path = "ipc" }
+irc = { version = "2025.12.0-modded", path = "irc" }
 
 signal-hook = "0.3.18"
 notify-rust = "4.11"

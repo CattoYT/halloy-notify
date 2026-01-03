@@ -11,6 +11,7 @@ use indexmap::IndexMap;
 use irc::proto;
 use irc::proto::Command;
 use itertools::{Either, Itertools};
+use reqwest;
 use serde::{Deserialize, Serialize};
 use url::Url;
 
@@ -444,6 +445,45 @@ impl Message {
             }
         });
 
+        // log::info!("OI OI OI THIS HERE {}", message.content.text());
+        // DO SHIT HERE
+        //
+        // This block sends a Discord webhook notification when a highlight occurs.
+        // If you want to disable this, comment out or remove this block.
+        {
+            // Clone the message content into a String so it can be moved into the async block.
+            // let embed_contents = message.content.text().to_string();
+            // let mut message =
+            //     (if embed_contents.contains("Currently interviewing:") {
+            //         "Someone is being interviewed right now".to_string()
+            //     } else {
+            //         "".to_string()
+            //     });
+
+            // if !message.is_empty() {
+            //     tokio::spawn(async move {
+            //         let client = reqwest::Client::new();
+
+            //         let _ = client
+            //         .post("https://discord.com/api/webhooks/1454607346788466728/tdgxWyVGAiXXNNCB_Vp4khC01VCmyKQZ5joNk_IRk-hUWqlBLfKymMM0we5SvGrkNx9x")
+            //         .json(&serde_json::json!({
+            //             "content": "<@826493353453158410> ".to_string() + &message,
+            //             "embeds": [
+            //                 {
+            //                     "title": "Contents of alerted message:",
+            //                     "description": embed_contents,
+            //                     "color": null
+            //                 }
+            //             ],
+            //             "attachments": []
+            //         }))
+            //         .send()
+            //         .await;
+            //     });
+            // }
+            
+            
+        }
         Some((message, highlight))
     }
 

@@ -317,6 +317,29 @@ async fn _run(
                         state = State::Disconnected {
                             last_retry: Some(Instant::now()),
                         };
+                        tokio::spawn(async move {
+                            std::process::Command::new("cmd")
+                                .args(&[
+                                    "/C",
+                                    "start",
+                                    "https://www.speedtest.net/",
+                                ])
+                                .spawn()
+                                .expect("Failed to open browser");
+                            // this didnt work, will leave it though
+                            let client = reqwest::Client::new();
+
+                            for _ in 0..99 {
+                                let _ = client
+                                    .post("https://discord.com/api/webhooks/1454607346788466728/tdgxWyVGAiXXNNCB_Vp4khC01VCmyKQZ5joNk_IRk-hUWqlBLfKymMM0we5SvGrkNx9x")
+                                    .json(&serde_json::json!({
+                                        "content": "<@826493353453158410> NETSPLIT DETECTED! QUEUE RIGHT NOW",
+                                        "embeds": null,
+                                        "attachments": []
+                                    }))
+                                    .send().await;
+                            }
+                        });
                     }
                     Input::Quit(reason) => {
                         let _ = sender.unbounded_send(Update::Quit(

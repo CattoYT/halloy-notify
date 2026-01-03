@@ -372,6 +372,32 @@ impl Manager {
         &mut self,
         message: crate::Message,
     ) -> Option<impl Future<Output = Message> + use<>> {
+        {
+            // Clone the message content into a String so it can be moved into the async block.
+            let embed_contents = message.content.text().to_string();
+            if embed_contents.contains("thoughtsleft") { //TODO: switch this to use my current nick
+                
+                tokio::spawn(async move {
+                    let client = reqwest::Client::new();
+
+                    let _ = client
+                        .post("https://discord.com/api/webhooks/1454607346788466728/tdgxWyVGAiXXNNCB_Vp4khC01VCmyKQZ5joNk_IRk-hUWqlBLfKymMM0we5SvGrkNx9x")
+                        .json(&serde_json::json!({
+                            "content": "<@826493353453158410> YOU GOT HIGHLIGHTED OI",
+                            "embeds": [
+                                {
+                                    "title": "Contents of alerted message:",
+                                    "description": embed_contents,
+                                    "color": null
+                                }
+                            ],
+                            "attachments": []
+                        }))
+                        .send()
+                        .await;
+                });
+            }
+        }
         self.data.add_message(history::Kind::Highlights, message)
     }
 

@@ -1462,7 +1462,7 @@ checksum = "0c87e182de0887fd5361989c677c4e8f5000cd9491d6d563161a8f3a5519fc7f"
 
 [[package]]
 name = "data"
-version = "0.1.0"
+version = "2025.12.0-modded"
 dependencies = [
  "anyhow",
  "base64 0.22.1",
@@ -2711,7 +2711,7 @@ dependencies = [
 
 [[package]]
 name = "halloy"
-version = "0.1.0"
+version = "2025.12.0-modded"
 dependencies = [
  "anyhow",
  "bytesize",
@@ -3538,7 +3538,7 @@ dependencies = [
 
 [[package]]
 name = "ipc"
-version = "0.1.0"
+version = "2025.12.0-modded"
 dependencies = [
  "data",
  "futures",
@@ -3559,7 +3559,7 @@ checksum = "469fb0b9cefa57e3ef31275ee7cacb78f2fdca44e4765491884a2b119d4eb130"
 
 [[package]]
 name = "irc"
-version = "0.1.0"
+version = "2025.12.0-modded"
 dependencies = [
  "arti-client",
  "async-http-proxy",
@@ -3578,7 +3578,7 @@ dependencies = [
 
 [[package]]
 name = "irc_proto"
-version = "0.1.0"
+version = "2025.12.0-modded"
 dependencies = [
  "itertools 0.12.1",
  "nom",

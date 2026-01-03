@@ -2,9 +2,9 @@
 # We should later use it for portable version of Halloy.
 
 #!/bin/bash
-EXE_NAME="halloy.exe"
+EXE_NAME="halloy-modded.exe"
 TARGET="x86_64-pc-windows-msvc"
-HALLOY_VERSION=$(cat VERSION).0
+HALLOY_VERSION=$(cat VERSION).0-modded
 
 # update package version on Cargo.toml
 cargo install cargo-edit
