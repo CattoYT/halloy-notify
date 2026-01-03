@@ -58,7 +58,7 @@ pub enum Message {
 #[derive(Debug, Clone)]
 pub enum Event {
     ContextMenu(context_menu::Event),
-    OpenBuffer(Target, BufferAction),
+    OpenBuffer(Server, Target, BufferAction),
     GoToMessage(Server, target::Channel, message::Hash),
     RequestOlderChatHistory,
     PreviewChanged,
@@ -293,7 +293,15 @@ pub fn view<'a>(
                         !config.buffer.nickname.alignment.is_top() &&
                         matches!(message.target.source(), message::Source::User(_)) &&
                         // don't hide if prev message has visible preview (when show_after_previews is enabled)
-                        !(config.buffer.nickname.hide_consecutive.show_after_previews && prev_message.is_some_and(|prev_msg| has_visible_preview(prev_msg, state, previews, &visible_for_source))) &&
+                        !(config.buffer.nickname.hide_consecutive.show_after_previews
+                                    && prev_message.is_some_and(|prev_msg| {
+                                        has_visible_preview(
+                                            prev_msg,
+                                            state,
+                                            previews,
+                                            &visible_for_source,
+                                        )
+                            })) &&
                         prev_message.is_some_and(|prev_message| {
                             matches!(
                                 (message.target.source(), prev_message.target.source()),
@@ -329,10 +337,9 @@ pub fn view<'a>(
 
                 let content = if let (
                     message::Content::Fragments(fragments),
-                    Some(previews),
-                    true,
+                    Some(previews)
                 ) =
-                    (&message.content, previews, config.preview.enabled)
+                    (&message.content, previews)
                 {
                     let urls = fragments
                         .iter()
@@ -742,10 +749,11 @@ impl State {
                     Some(Event::ContextMenu(context_menu::update(message))),
                 );
             }
-            Message::Link(message::Link::Channel(channel)) => {
+            Message::Link(message::Link::Channel(server, channel)) => {
                 return (
                     Task::none(),
                     Some(Event::OpenBuffer(
+                        server,
                         Target::Channel(channel),
                         config.actions.buffer.click_channel_name,
                     )),
@@ -754,12 +762,13 @@ impl State {
             Message::Link(message::Link::Url(url)) => {
                 return (Task::none(), Some(Event::OpenUrl(url)));
             }
-            Message::Link(message::Link::User(user)) => {
+            Message::Link(message::Link::User(server, user)) => {
                 let event = match config.buffer.nickname.click {
                     data::config::buffer::NicknameClickAction::OpenQuery => {
                         let query = target::Query::from(user);
 
                         Event::OpenBuffer(
+                            server,
                             Target::Query(query),
                             config.actions.buffer.click_username,
                         )

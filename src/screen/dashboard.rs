@@ -176,6 +176,18 @@ impl Dashboard {
         self.reprocess_history(clients, buffer_config);
     }
 
+    pub fn reload_visible_previews(
+        &mut self,
+        preview_config: &config::Preview,
+    ) -> Task<Message> {
+        Task::batch(self.panes.visible_urls().into_iter().map(|url| {
+            Task::perform(
+                data::preview::load(url.clone(), preview_config.clone()),
+                move |result| Message::LoadPreview((url.clone(), result)),
+            )
+        }))
+    }
+
     pub fn reprocess_history(
         &mut self,
         clients: &client::Map,
@@ -1996,42 +2008,17 @@ impl Dashboard {
 
                 return (Task::batch(tasks), event);
             }
-            buffer::Event::OpenTargetForServer(
-                server,
-                target,
-                buffer_action,
-            ) => {
-                let task = self.open_target(
-                    server.clone(),
-                    target,
-                    clients,
-                    buffer_action,
-                    config,
-                );
-
-                return (task, None);
-            }
-            buffer::Event::OpenBuffers(targets) => {
-                // TODO: Internal buffers hitting this wont have a server, so we have to handle that with OpenBufferForServer.
-                // Currently, i believe Highlights and Logs will fail.
-                // We should also rename this so its easier to understand going forward.
-
+            buffer::Event::OpenBuffers(server, targets) => {
                 let mut tasks = vec![];
-                if let Some(server) = pane
-                    .buffer
-                    .upstream()
-                    .map(buffer::Upstream::server)
-                    .cloned()
-                {
-                    for (target, buffer_action) in targets {
-                        tasks.push(self.open_target(
-                            server.clone(),
-                            target,
-                            clients,
-                            buffer_action,
-                            config,
-                        ));
-                    }
+
+                for (target, buffer_action) in targets {
+                    tasks.push(self.open_target(
+                        server.clone(),
+                        target,
+                        clients,
+                        buffer_action,
+                        config,
+                    ));
                 }
 
                 return (Task::batch(tasks), None);

@@ -12,6 +12,7 @@ use tokio_stream::wrappers::ReadDirStream;
 
 pub use self::actions::Actions;
 pub use self::buffer::Buffer;
+pub use self::context_menu::ContextMenu;
 pub use self::ctcp::Ctcp;
 pub use self::file_transfer::FileTransfer;
 pub use self::highlights::Highlights;
@@ -34,6 +35,7 @@ use crate::{Theme, environment};
 
 pub mod actions;
 pub mod buffer;
+pub mod context_menu;
 pub mod ctcp;
 pub mod discord_webhook;
 pub mod file_transfer;
@@ -55,6 +57,7 @@ const DEFAULT_THEME_NAME: &str = "ferra";
 #[derive(Debug, Clone, Default)]
 pub struct Config {
     pub appearance: Appearance,
+    pub context_menu: ContextMenu,
     pub servers: ServerMap,
     pub proxy: Option<Proxy>,
     pub font: Font,
@@ -304,6 +307,7 @@ impl Config {
         pub struct Configuration {
             pub theme: ThemeKeys,
             pub servers: IndexMap<ServerName, Server>,
+            pub context_menu: ContextMenu,
             pub proxy: Option<Proxy>,
             pub font: Font,
             pub scale_factor: ScaleFactor,
@@ -328,6 +332,7 @@ impl Config {
                 Self {
                     theme: ThemeKeys::default(),
                     servers: IndexMap::<ServerName, Server>::default(),
+                    context_menu: ContextMenu::default(),
                     proxy: None,
                     font: Font::default(),
                     scale_factor: ScaleFactor::default(),
@@ -362,6 +367,7 @@ impl Config {
         let Configuration {
             theme,
             servers,
+            context_menu,
             font,
             proxy,
             scale_factor,
@@ -392,6 +398,7 @@ impl Config {
 
         Ok(Config {
             appearance,
+            context_menu,
             servers,
             font,
             proxy,

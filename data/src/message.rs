@@ -2995,9 +2995,9 @@ fn monitored_targets_text(targets: Vec<String>) -> Option<String> {
 
 #[derive(Debug, Clone)]
 pub enum Link {
-    Channel(target::Channel),
+    Channel(Server, target::Channel),
     Url(String),
-    User(User),
+    User(Server, User),
     GoToMessage(Server, target::Channel, Hash),
     ExpandCondensedMessage(DateTime<Utc>, Hash),
     ContractCondensedMessage(DateTime<Utc>, Hash),
@@ -3006,7 +3006,7 @@ pub enum Link {
 impl Link {
     pub fn user(&self) -> Option<&User> {
         match self {
-            Link::User(user) => Some(user),
+            Link::User(_, user) => Some(user),
             _ => None,
         }
     }

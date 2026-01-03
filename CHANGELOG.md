@@ -5,6 +5,9 @@ Added:
 - Added `Open URL` entry to URL context menus
 - Setting to not hide consecutive if previous message was a image preview
 - Channel discovery buffer to view all channels on a server (using LIST). Can be opened via sidebar button or command bar.
+- Setting to adjust buffer padding and server spacing in sidemenu
+- Setting to adjust entry padding in context menus
+- Support for configuring a regex-based allowlist of URL patterns for Preview
 - Setting to open a new pane, replace current pane, or open a new window after `/join`
 - Emoji, channel, and user completion can be used with commands
 - Auto-completion (emoji/channel/user) will auto-complete at the text cursor (instead of the end of the current input)
@@ -20,12 +23,14 @@ Fixed:
 - Channel auto-completion works with all channel prefixes specified by the server
 - Number pad enter now sends messages instead of adding a new line
 - Join & monitor commands sent automatically on connection respect TARGMAX limits specified by the server
+- `/sysinfo` is cleared from input when sent, and is recorded to the buffer even if the server doesn't support echoes
+- Channel and user links in messages in the highlight buffer
 
 Thanks:
 
 - Contributions: @csmith
-- Bug reports: halloy3002, g00s
-- Feature requests: @tribly, @deepspaceaxolotl, @dieperdev, @Erroneuz
+- Bug reports: halloy3002, g00s, Eagle-1
+- Feature requests: @tribly, @deepspaceaxolotl, @dieperdev, @Erroneuz, @lorenzosu, @Summertime
 
 # 2025.12 (2025-11-28)
 
