@@ -74,6 +74,7 @@ pub struct Config {
     pub actions: Actions,
     pub ctcp: Ctcp,
     pub logs: Logs,
+    pub discord_webhook: DiscordWebhook,
     pub platform_specific: PlatformSpecific,
 }
 
@@ -395,6 +396,8 @@ impl Config {
         let appearance = Self::load_appearance(theme.keys())
             .await
             .unwrap_or_default();
+        
+        
 
         Ok(Config {
             appearance,
@@ -415,6 +418,7 @@ impl Config {
             actions,
             ctcp,
             logs,
+            discord_webhook,
             platform_specific,
         })
     }

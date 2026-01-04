@@ -211,9 +211,17 @@ impl Halloy {
 
         let (screen, servers, config, command) = match config_load {
             Ok(config) => {
+                log::debug!(
+                    "[DISCORD] {}",
+                    &config
+                        .discord_webhook
+                        .webhook
+                        .clone()
+                        .unwrap_or("WEBHOOK MISSING".to_owned())
+                );
                 let mut servers: server::Map = config.servers.clone().into();
                 servers.set_order(config.sidebar.order_by);
-                let (mut screen, command) = load_dashboard(&config);
+                let (mut screen, command) = load_dashboard(&config); // TODO__: TEST EVERYTHING
                 screen.init_filters(&servers, &data::client::Map::default());
                 (
                     Screen::Dashboard(screen),
@@ -762,6 +770,7 @@ impl Halloy {
 
                                                 let task = dashboard.record_highlight(
                                                     highlight_message,
+                                                    &self.config,
                                                 );
                                                 commands.push(task.map(Message::Dashboard));
                                             } else if !message.blocked

@@ -12,7 +12,9 @@ use crate::message::broadcast::{self, Broadcast};
 use crate::message::{self, Limit};
 use crate::target::{self, Target};
 use crate::user::Nick;
-use crate::{Config, Server, buffer, client, config, input, isupport, server};
+use crate::{
+    Config, Server, User, buffer, client, config, input, isupport, server,
+};
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Resource {
@@ -368,36 +370,27 @@ impl Manager {
     // Unlike block_and_record_message, the message's blocked status should be
     // determined before recording a highlight in order to block highlight
     // notifications.
-    pub fn record_highlight(
+    pub fn record_highlight<'a>(
         &mut self,
         message: crate::Message,
+        config: &'a Config,
     ) -> Option<impl Future<Output = Message> + use<>> {
         {
             // Clone the message content into a String so it can be moved into the async block.
             let embed_contents = message.content.text().to_string();
-            if embed_contents.contains("thoughtsleft") {
-                //TODO: switch this to use my current nick
+            let sender = match message.target.source() {
+                crate::message::Source::User(username) => {
+                    username.as_str().to_owned()
+                }
+                _ => "Unknown".to_owned(),
+            };
+            // if embed_contents.contains("thoughtsleft") {
+            //TODO: switch this to use my current nick
 
-                tokio::spawn(async move {
-                    let client = reqwest::Client::new();
-
-                    let _ = client
-                        .post("") //TODO__: RE-ADD
-                        .json(&serde_json::json!({
-                            "content": "<@826493353453158410> YOU GOT HIGHLIGHTED OI",
-                            "embeds": [
-                                {
-                                    "title": "Contents of alerted message:",
-                                    "description": embed_contents,
-                                    "color": null
-                                }
-                            ],
-                            "attachments": []
-                        }))
-                        .send()
-                        .await;
-                });
-            }
+            let _ = config.discord_webhook.send_message(
+                embed_contents,
+                config::discord_webhook::MessageType::Highlight(sender),
+            );
         }
         self.data.add_message(history::Kind::Highlights, message)
     }

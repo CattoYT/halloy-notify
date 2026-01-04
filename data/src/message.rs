@@ -449,16 +449,37 @@ impl Message {
         // DO SHIT HERE
         //
         // This block sends a Discord webhook notification when a highlight occurs.
-        // If you want to disable this, comment out or remove this block.
-        {
+        if config.discord_webhook.webhook.is_some() {
             // Clone the message content into a String so it can be moved into the async block.
-            // let embed_contents = message.content.text().to_string();
-            // let mut message =
-            //     (if embed_contents.contains("Currently interviewing:") {
-            //         "Someone is being interviewed right now".to_string()
-            //     } else {
-            //         "".to_string()
-            //     });
+
+            //Currently interviewing: somethoughtsleft ::: #red-interview-03 ::: 58 remaining in queue.
+            let embed_contents = message.content.text().to_string();
+            let self_interview_check =
+                "Currently interviewing: ".to_owned() + our_nick.as_str();
+            if embed_contents.contains(&self_interview_check) {
+                let _ = config.discord_webhook.send_message(
+                    embed_contents,
+                    config::discord_webhook::MessageType::SelfInterview,
+                );
+            } else if embed_contents.contains("Currently interviewing: ") {
+                let message =
+                    embed_contents.split(" ::: ").collect::<Vec<&str>>();
+                let _ = config.discord_webhook.send_message(
+                    embed_contents.clone(),
+                    config::discord_webhook::MessageType::Interview(
+                        message[0]
+                            .strip_prefix("Currently interviewing: ")
+                            .unwrap() //this will succeed or something went VERY WRONG
+                            .trim()
+                            .to_string(),
+                        message[2]
+                            .strip_suffix(" remaining in queue.")
+                            .unwrap_or("1337")
+                            .parse()
+                            .unwrap_or(1337),
+                    ),
+                );
+            }
 
             // if !message.is_empty() {
             //     tokio::spawn(async move {

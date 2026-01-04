@@ -317,6 +317,9 @@ async fn _run(
                         state = State::Disconnected {
                             last_retry: Some(Instant::now()),
                         };
+                        
+                        
+                        // TODO__: implement webhook spam for netsplit
                         tokio::spawn(async move {
                             std::process::Command::new("cmd")
                                 .args(&[
@@ -326,19 +329,9 @@ async fn _run(
                                 ])
                                 .spawn()
                                 .expect("Failed to open browser");
+                            
                             // this didnt work, will leave it though
-                            let client = reqwest::Client::new();
-
-                            for _ in 0..99 {
-                                let _ = client
-                                    .post("") // TODO__: RE-ADD
-                                    .json(&serde_json::json!({
-                                        "content": "<@826493353453158410> NETSPLIT DETECTED! QUEUE RIGHT NOW",
-                                        "embeds": null,
-                                        "attachments": []
-                                    }))
-                                    .send().await;
-                            }
+                            
                         });
                     }
                     Input::Quit(reason) => {
@@ -373,7 +366,10 @@ async fn connect(
     if let Err(e) = client.connect() {
         log::error!("Error when connecting client: {e:?}");
     }
-
+    
+    // TODO__: check if server is RED and possibly send !position to gatekeeper?
+    
+    
     Ok((
         Stream {
             connection,

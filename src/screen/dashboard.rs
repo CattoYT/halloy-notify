@@ -2691,12 +2691,13 @@ impl Dashboard {
         }
     }
 
-    pub fn record_highlight(
+    pub fn record_highlight<'a>(
         &mut self,
         message: data::Message,
+        config: &'a Config,
     ) -> Task<Message> {
         self.history
-            .record_highlight(message)
+            .record_highlight(message, config)
             .map_or_else(Task::none, |task| {
                 Task::perform(task, Message::History)
             })

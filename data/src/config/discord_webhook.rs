@@ -15,8 +15,8 @@ pub struct DiscordWebhook {
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum MessageType {
-    Highlight(String), //include highlighter
-    Interview(String), //include username of person being interviewed maybe
+    Highlight(String),      //include highlighter
+    Interview(String, i32), //include username of person being interviewed maybe
     SelfInterview,
     Test,
     Netsplit,
@@ -27,7 +27,7 @@ impl Default for DiscordWebhook {
         Self {
             webhook: None,
             urgency_level: 1,
-            spam_for_interview: false,
+            spam_for_interview: true,
         }
     }
 }
@@ -55,9 +55,12 @@ impl DiscordWebhook {
             MessageType::Highlight(user) => {
                 (format!("You were highlighted by {user}"), 2)
             }
-            MessageType::Interview(user) => {
-                (format!("User \"{user}\" is being interviewed!"), 1)
-            }
+            MessageType::Interview(user, q_length) => (
+                format!(
+                    "{user} is being interviewed! Queue length: {q_length}"
+                ),
+                1,
+            ),
             MessageType::SelfInterview => {
                 (String::from("YOU ARE BEING INTERVIEWED!"), 3)
             }
