@@ -479,28 +479,6 @@ impl Message {
                     ),
                 );
             }
-
-            // if !message.is_empty() {
-            //     tokio::spawn(async move {
-            //         let client = reqwest::Client::new();
-
-            //         let _ = client
-            //         .post("") // TODO__: RE-ADD
-            //         .json(&serde_json::json!({
-            //             "content": "<@826493353453158410> ".to_string() + &message,
-            //             "embeds": [
-            //                 {
-            //                     "title": "Contents of alerted message:",
-            //                     "description": embed_contents,
-            //                     "color": null
-            //                 }
-            //             ],
-            //             "attachments": []
-            //         }))
-            //         .send()
-            //         .await;
-            //     });
-            // }
         }
         Some((message, highlight))
     }
