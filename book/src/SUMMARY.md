@@ -61,6 +61,7 @@
 - [Context Menu](configuration/context-menu/README.md)
   - [Padding](configuration/context-menu/padding.md)
 - [CTCP](configuration/cctp/README.md)
+- [Discord Webhook](configuration/discord_webhook/README.md)
 - [File Transfer](configuration/file-transfer/README.md)
   - [Auto Accept](configuration/file-transfer/auto_accept.md)
   - [Server](configuration/file-transfer/server.md)
