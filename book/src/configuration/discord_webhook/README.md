@@ -7,7 +7,7 @@ Settings regarding Discord Webhook integration
     - [webhook](#webhook)
     - [user_id](#user_id)
     - [urgency_level](#urgency_level)
-    - [spam_for_interview](#spam_for_interview-weight)    
+    - [spam_for_interview](#spam_for_interview)    
 
 ## Configuration
 
