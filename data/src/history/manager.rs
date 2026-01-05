@@ -384,9 +384,10 @@ impl Manager {
                 }
                 _ => "Unknown".to_owned(),
             };
+            
             // if embed_contents.contains("thoughtsleft") {
             //TODO: switch this to use my current nick
-
+            
             let _ = config.discord_webhook.send_message(
                 embed_contents,
                 config::discord_webhook::MessageType::Highlight(sender),

@@ -219,6 +219,14 @@ impl Halloy {
                         .clone()
                         .unwrap_or("WEBHOOK MISSING".to_owned())
                 );
+                log::debug!(
+                    "[DISCORD] {}",
+                    &config
+                        .discord_webhook
+                        .user_id
+                        .clone()
+                        .unwrap_or("UID MISSING".to_owned())
+                );
                 let mut servers: server::Map = config.servers.clone().into();
                 servers.set_order(config.sidebar.order_by);
                 let (mut screen, command) = load_dashboard(&config); // TODO__: TEST EVERYTHING
@@ -309,6 +317,9 @@ impl Halloy {
 
         let default_config = Config::default();
         let config = config_load.as_ref().unwrap_or(&default_config);
+
+        //
+
         let show_new_version_indicator =
             config.sidebar.user_menu.show_new_version_indicator;
 

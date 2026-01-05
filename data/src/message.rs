@@ -11,7 +11,6 @@ use indexmap::IndexMap;
 use irc::proto;
 use irc::proto::Command;
 use itertools::{Either, Itertools};
-use reqwest;
 use serde::{Deserialize, Serialize};
 use url::Url;
 

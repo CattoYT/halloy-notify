@@ -9,6 +9,7 @@ use serde::Deserialize;
 pub struct DiscordWebhook {
     #[serde(rename = "webhook")]
     pub webhook: Option<String>,
+    pub user_id: Option<String>,
     pub urgency_level: i8,
     pub spam_for_interview: bool,
 }
@@ -26,6 +27,7 @@ impl Default for DiscordWebhook {
     fn default() -> Self {
         Self {
             webhook: None,
+            user_id: None,
             urgency_level: 1,
             spam_for_interview: true,
         }
@@ -35,6 +37,7 @@ impl Default for DiscordWebhook {
 pub enum WebhookError {
     EmptyWebhookUrl,
     Idk,
+    EmptyUid,
 }
 
 impl DiscordWebhook {
@@ -51,21 +54,34 @@ impl DiscordWebhook {
             None => return Err(WebhookError::EmptyWebhookUrl),
         };
 
+        let userid = match &self.user_id {
+            Some(uid) => {
+                log::debug!("Missing discord uid!");
+                uid
+            }
+            None => {
+                log::debug!("Missing discord uid!");
+                return Err(WebhookError::EmptyUid);
+            }
+        };
+
         let (message, urgency): (String, i8) = match &message_type {
             MessageType::Highlight(user) => {
-                (format!("You were highlighted by {user}"), 2)
+                (format!("<@{userid}> You were highlighted by {user}"), 2)
             }
             MessageType::Interview(user, q_length) => (
                 format!(
-                    "{user} is being interviewed! Queue length: {q_length}"
+                    "<@{userid}> {user} is being interviewed! Queue length: {q_length}"
                 ),
                 1,
             ),
             MessageType::SelfInterview => {
-                (String::from("YOU ARE BEING INTERVIEWED!"), 3)
+                (format!("<@{userid}> YOU ARE BEING INTERVIEWED!"), 3)
             }
-            MessageType::Netsplit => (String::from("NETSPLIT DETECTED"), 3),
-            MessageType::Test => (String::from("Test message"), 1),
+            MessageType::Netsplit => {
+                (format!("<@{userid}> NETSPLIT DETECTED"), 3)
+            }
+            MessageType::Test => (format!("<@{userid}> Test message"), 1),
         };
 
         tokio::spawn(async move {
@@ -75,7 +91,7 @@ impl DiscordWebhook {
                     let _ = client
                         .post(&url)
                         .json(&serde_json::json!({
-                            "content": "<@826493353453158410> ".to_string() + &message,
+                            "content": &message,
                             "embeds": [
                                 {
                                     "title": "Contents of alerted message:",
@@ -87,25 +103,25 @@ impl DiscordWebhook {
                         }))
                         .send()
                         .await;
-                    sleep(Duration::from_secs(1));
+                    sleep(Duration::from_millis(300));
                 }
             } else {
                 if urgency_level <= urgency {
                     let _ = client
-                    .post(&url)
-                    .json(&serde_json::json!({
-                        "content": "<@826493353453158410> ".to_string() + &message,
-                        "embeds": [
-                            {
-                                "title": "Contents of alerted message:",
-                                "description": message_contents,
-                                "color": null
-                            }
-                        ],
-                        "attachments": []
-                    }))
-                    .send()
-                    .await;
+                        .post(&url)
+                        .json(&serde_json::json!({
+                            "content": &message,
+                            "embeds": [
+                                {
+                                    "title": "Contents of alerted message:",
+                                    "description": message_contents,
+                                    "color": null
+                                }
+                            ],
+                            "attachments": []
+                        }))
+                        .send()
+                        .await;
                 } else {
                     log::debug!(
                         "Skipped lower urgency event of {:?}",
